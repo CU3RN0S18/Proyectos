@@ -1,4 +1,4 @@
-import random
+
 import statistics
 
 def registrar_libros():
