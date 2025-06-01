@@ -1,0 +1,79 @@
+import statistics
+
+def registrar_estudiantes():
+    #aparte de poner los resultados igual es para crear la listas
+    
+    num_estudiantes = int(input("Ingrese el número de estudiantes: "))
+    estudiantes = []
+    for i in range(num_estudiantes):
+        nombre = input(f"Ingrese el nombre del estudiante {i + 1}: ")
+        notas_str = input(f"Ingrese las 3 notas del estudiante {nombre} separadas por espacios: ").split()
+        notas = [float(nota) for nota in notas_str]
+        estudiantes.append({"nombre": nombre, "notas": notas})
+    return estudiantes
+
+def calcular_promedio(notas):
+   
+    # calcula el promedio de una lista de notas.
+   
+    return sum(notas) / len(notas)
+
+def determinar_estado(promedio):
+  
+    #para ver si un estudiante aprueba o esta reprobado.
+   
+    if promedio >= 6.0:
+        return "Aprobado"
+    else:
+        return "Reprobado"
+
+def mostrar_resultados(estudiantes_con_resultados):
+    #Imprime los resultados de nombres, notas,  promedio y los estados de los estudiantes. igul esta el diccionario donde se guarda la informaciones del estudiante.
+
+    print("\n--- Resultados de los Estudiantes ---")
+    for estudiante in estudiantes_con_resultados:
+        print(f"Nombre: {estudiante['nombre']}")
+        print(f"Notas: {estudiante['notas']}")
+        print(f"Promedio: {estudiante['promedio']:.2f}")
+        print(f"Estado: {estudiante['estado']}")
+        print("-" * 20)
+
+def calcular_estadisticas(todos_los_promedios, todas_las_notas):
+ 
+    estadisticas = {}
+    if todos_los_promedios:
+        estadisticas['promedio_general'] = statistics.mean(todos_los_promedios)
+    else:
+        estadisticas['promedio_general'] = 0
+
+    if todas_las_notas:
+        estadisticas['nota_mas_alta'] = max(todas_las_notas)
+        estadisticas['nota_mas_baja'] = min(todas_las_notas)
+    else:
+        estadisticas['nota_mas_alta'] = None
+        estadisticas['nota_mas_baja'] = None
+    return estadisticas
+
+if __name__ == "__main__":
+    estudiantes = registrar_estudiantes()
+    estudiantes_con_resultados = []
+    todos_los_promedios = []
+    todas_las_notas = []
+
+    for estudiante in estudiantes:
+        promedio = calcular_promedio(estudiante['notas'])
+        estado = determinar_estado(promedio)
+        estudiante_con_resultado = estudiante.copy()
+        estudiante_con_resultado['promedio'] = promedio
+        estudiante_con_resultado['estado'] = estado
+        estudiantes_con_resultados.append(estudiante_con_resultado)
+        todos_los_promedios.append(promedio)
+        todas_las_notas.extend(estudiante['notas'])
+
+    mostrar_resultados(estudiantes_con_resultados)
+
+    estadisticas_generales = calcular_estadisticas(todos_los_promedios, todas_las_notas)
+    print("\n Resultados General2 del Grupo ")
+    print(f"Promedio General: {estadisticas_generales['promedio_general']:.2f}")
+    print(f"Nota Mas Alta: {estadisticas_generales['nota_mas_alta']}")
+    print(f"Nota Mas Baja: {estadisticas_generales['nota_mas_baja']}")
