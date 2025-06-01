@@ -1,0 +1,265 @@
+import random
+import statistics
+
+def registrar_libros():
+    """
+    Permite al usuario registrar la información de los libros.
+    Valida que el año de publicación y el número de páginas sean números positivos.
+    Retorna una lista de diccionarios, donde cada diccionario representa un libro.
+    """
+    while True:
+        try:
+            num_libros = int(input("Ingrese la cantidad de libros a registrar: "))
+            if num_libros <= 0:
+                print("La cantidad de libros debe ser un número entero positivo.")
+            else:
+                break
+        except ValueError:
+            print("Entrada inválida. Por favor, ingrese un número entero.")
+
+    libros = []
+    for i in range(num_libros):
+        print(f"\n--- Registrando Libro {i + 1} ---")
+        titulo = input("Ingrese el título del libro: ")
+        autor = input("Ingrese el autor del libro: ")
+
+        while True:
+            try:
+                ano_publicacion = int(input("Ingrese el año de publicación: "))
+                if ano_publicacion <= 0:
+                    print("El año de publicación debe ser un número positivo.")
+                else:
+                    break
+            except ValueError:
+                print("Entrada inválida. Por favor, ingrese un número entero para el año.")
+
+        genero = input("Ingrese el género del libro (ej: Ciencia Ficción, Historia, Terror, Infantil, Romance): ")
+
+        while True:
+            try:
+                num_paginas = int(input("Ingrese el número de páginas: "))
+                if num_paginas <= 0:
+                    print("El número de páginas debe ser un número positivo.")
+                else:
+                    break
+            except ValueError:
+                print("Entrada inválida. Por favor, ingrese un número entero para el número de páginas.")
+
+        libros.append({
+            "titulo": titulo,
+            "autor": autor,
+            "ano_publicacion": ano_publicacion,
+            "genero": genero,
+            "num_paginas": num_paginas
+        })
+    return libros
+
+def buscar_libros_por_genero(genero_buscado, lista_libros):
+    """
+    Busca libros por un género específico.
+    Args:
+        genero_buscado (str): El género a buscar.
+        lista_libros (list): La lista de diccionarios de libros.
+    Returns:
+        list: Una lista de diccionarios de libros que coinciden con el género.
+    """
+    libros_encontrados = [
+        libro for libro in lista_libros
+        if libro["genero"].lower() == genero_buscado.lower()
+    ]
+    return libros_encontrados
+
+def libro_mas_largo(lista_libros):
+    """
+    Encuentra el libro con el mayor número de páginas.
+    Args:
+        lista_libros (list): La lista de diccionarios de libros.
+    Returns:
+        dict or None: El diccionario del libro más largo, o None si la lista está vacía.
+    """
+    if not lista_libros:
+        return None
+    
+    # Usamos la función max() con una clave (lambda) para comparar por 'num_paginas'
+    return max(lista_libros, key=lambda libro: libro["num_paginas"])
+
+def promedio_paginas_por_genero(genero_buscado, lista_libros):
+    """
+    Calcula el promedio de páginas de los libros de un género específico.
+    Args:
+        genero_buscado (str): El género para el cual calcular el promedio.
+        lista_libros (list): La lista de diccionarios de libros.
+    Returns:
+        float: El promedio de páginas, o 0.0 si no hay libros del género o la lista está vacía.
+    """
+    paginas_del_genero = [
+        libro["num_paginas"] for libro in lista_libros
+        if libro["genero"].lower() == genero_buscado.lower()
+    ]
+    
+    if not paginas_del_genero:
+        return 0.0
+    
+    return sum(paginas_del_genero) / len(paginas_del_genero)
+
+def recomendar_libro_aleatorio(lista_libros):
+    """
+    Selecciona y muestra un libro al azar de la lista.
+    Args:
+        lista_libros (list): La lista de diccionarios de libros.
+    Returns:
+        dict or None: El diccionario del libro seleccionado al azar, o None si la lista está vacía.
+    """
+    if not lista_libros:
+        print("No hay libros en la biblioteca para recomendar.")
+        return None
+    
+    libro_aleatorio = random.choice(lista_libros)
+    print("\n--- Libro Recomendado Aleatoriamente ---")
+    print(f"Título: {libro_aleatorio['titulo']}")
+    print(f"Autor: {libro_aleatorio['autor']}")
+    print(f"Género: {libro_aleatorio['genero']}")
+    print(f"Año: {libro_aleatorio['ano_publicacion']}")
+    print(f"Páginas: {libro_aleatorio['num_paginas']}")
+    return libro_aleatorio
+
+def calcular_estadisticas_avanzadas(lista_libros):
+    """
+    Calcula la mediana de páginas y la desviación estándar del año de publicación
+    de todos los libros en la lista.
+    Args:
+        lista_libros (list): La lista de diccionarios de libros.
+    Returns:
+        dict: Un diccionario con la mediana de páginas y la desviación estándar del año,
+              o valores 'N/A' si no hay suficientes datos.
+    """
+    estadisticas = {}
+    
+    paginas = [libro["num_paginas"] for libro in lista_libros]
+    anos_publicacion = [libro["ano_publicacion"] for libro in lista_libros]
+
+    # Mediana de páginas
+    if paginas:
+        estadisticas['mediana_paginas'] = statistics.median(paginas)
+    else:
+        estadisticas['mediana_paginas'] = "N/A"
+
+    # Desviación estándar del año de publicación
+    # statistics.stdev requiere al menos 2 puntos de datos
+    if len(anos_publicacion) >= 2:
+        estadisticas['desviacion_estandar_ano'] = statistics.stdev(anos_publicacion)
+    elif len(anos_publicacion) == 1:
+        estadisticas['desviacion_estandar_ano'] = 0.0 
+    else:
+        estadisticas['desviacion_estandar_ano'] = "N/A"
+        
+    return estadisticas
+
+def mostrar_info_libro(libro):
+    """
+    Función auxiliar para imprimir la información de un libro.
+    """
+    if libro:
+        print(f"  Título: {libro['titulo']}")
+        print(f"  Autor: {libro['autor']}")
+        print(f"  Género: {libro['genero']}")
+        print(f"  Año: {libro['ano_publicacion']}")
+        print(f"  Páginas: {libro['num_paginas']}")
+    else:
+        print("  Libro no encontrado o lista vacía.")
+
+#  Datos iniciales de 5 libros 
+# Estos libros se usarán como iniciales si  no registra nuevos.
+libros_iniciales = [
+    {
+        "titulo": "It",
+        "autor": "Stephen King",
+        "ano_publicacion": 1986,
+        "genero": "Terror",
+        "num_paginas": 1138
+    },
+    {
+        "titulo": "El Resplandor",
+        "autor": "Stephen King",
+        "ano_publicacion": 1977,
+        "genero": "Terror",
+        "num_paginas": 447
+    },
+    {
+        "titulo": "El Principito",
+        "autor": "Antoine de Saint-Exupéry",
+        "ano_publicacion": 1943,
+        "genero": "Infantil",
+        "num_paginas": 96
+    },
+    {
+        "titulo": "Orgullo y Prejuicio",
+        "autor": "Jane Austen",
+        "ano_publicacion": 1813,
+        "genero": "Romance",
+        "num_paginas": 432
+    },
+    {
+        "titulo": "Cien años de soledad",
+        "autor": "Gabriel García Márquez",
+        "ano_publicacion": 1967,
+        "genero": "Realismo Mágico", 
+        "num_paginas": 496
+    }
+]
+
+#  Función Principal del Programa 
+if __name__ == "__main__":
+    biblioteca = []
+
+    print("¿Desea registrar nuevos libros o usar los libros iniciales?")
+    opcion = input("Escriba 'registrar' para nuevos o 'usar iniciales' para los predefinidos: ").lower()
+
+    if opcion == 'registrar':
+        biblioteca = registrar_libros()
+    else:
+        biblioteca = libros_iniciales
+        print("\nUsando la lista de libros iniciales.")
+
+    if not biblioteca:
+        print("No hay libros en la biblioteca. Saliendo del programa.")
+    else:
+        #  Mostrar todos los libros en la biblioteca 
+        print("\n--- Libros en la Biblioteca ---")
+        for libro in biblioteca:
+            mostrar_info_libro(libro)
+            print("-" * 30)
+
+        #  Búsqueda por género 
+        genero_a_buscar = input("\nIngrese el género de libros a buscar (ej: Terror, Infantil, Romance): ")
+        libros_por_genero = buscar_libros_por_genero(genero_a_buscar, biblioteca)
+        print(f"\n--- Libros de género '{genero_a_buscar}' ---")
+        if libros_por_genero:
+            for libro in libros_por_genero:
+                mostrar_info_libro(libro)
+                print("-" * 30)
+        else:
+            print(f"No se encontraron libros del género '{genero_a_buscar}'.")
+
+        #  Libro más largo 
+        libro_largo = libro_mas_largo(biblioteca)
+        print("\n--- Libro con más páginas ---")
+        mostrar_info_libro(libro_largo)
+
+        #  Promedio de páginas por género 
+        genero_promedio = input("\nIngrese el género para calcular el promedio de páginas (ej: Terror, Infantil, Romance): ")
+        promedio = promedio_paginas_por_genero(genero_promedio, biblioteca)
+        if promedio > 0:
+            print(f"\nEl promedio de páginas para libros de género '{genero_promedio}' es: {promedio:.2f}")
+        else:
+            print(f"No hay libros del género '{genero_promedio}' o no se pudo calcular el promedio.")
+
+        # Recomendación de libro aleatorio 
+        recomendar_libro_aleatorio(biblioteca)
+
+        # Estadísticas avanzadas 
+        estadisticas_avanzadas = calcular_estadisticas_avanzadas(biblioteca)
+        print("\n--- Estadísticas Avanzadas de la Biblioteca ---")
+        print(f"Mediana de páginas de todos los libros: {estadisticas_avanzadas['mediana_paginas']}")
+        print(f"Desviación estándar del año de publicación: {estadisticas_avanzadas['desviacion_estandar_ano']:.2f}" if isinstance(estadisticas_avanzadas['desviacion_estandar_ano'], float) else f"Desviación estándar del año de publicación: {estadisticas_avanzadas['desviacion_estandar_ano']}")
+
