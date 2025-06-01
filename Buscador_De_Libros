@@ -1,12 +1,8 @@
-
+import random
 import statistics
 
 def registrar_libros():
-    """
-    Permite al usuario registrar la información de los libros.
-    Valida que el año de publicación y el número de páginas sean números positivos.
-    Retorna una lista de diccionarios, donde cada diccionario representa un libro.
-    """
+   
     while True:
         try:
             num_libros = int(input("Ingrese la cantidad de libros a registrar: "))
@@ -55,14 +51,7 @@ def registrar_libros():
     return libros
 
 def buscar_libros_por_genero(genero_buscado, lista_libros):
-    """
-    Busca libros por un género específico.
-    Args:
-        genero_buscado (str): El género a buscar.
-        lista_libros (list): La lista de diccionarios de libros.
-    Returns:
-        list: Una lista de diccionarios de libros que coinciden con el género.
-    """
+  
     libros_encontrados = [
         libro for libro in lista_libros
         if libro["genero"].lower() == genero_buscado.lower()
@@ -70,13 +59,7 @@ def buscar_libros_por_genero(genero_buscado, lista_libros):
     return libros_encontrados
 
 def libro_mas_largo(lista_libros):
-    """
-    Encuentra el libro con el mayor número de páginas.
-    Args:
-        lista_libros (list): La lista de diccionarios de libros.
-    Returns:
-        dict or None: El diccionario del libro más largo, o None si la lista está vacía.
-    """
+   
     if not lista_libros:
         return None
     
@@ -84,14 +67,7 @@ def libro_mas_largo(lista_libros):
     return max(lista_libros, key=lambda libro: libro["num_paginas"])
 
 def promedio_paginas_por_genero(genero_buscado, lista_libros):
-    """
-    Calcula el promedio de páginas de los libros de un género específico.
-    Args:
-        genero_buscado (str): El género para el cual calcular el promedio.
-        lista_libros (list): La lista de diccionarios de libros.
-    Returns:
-        float: El promedio de páginas, o 0.0 si no hay libros del género o la lista está vacía.
-    """
+  
     paginas_del_genero = [
         libro["num_paginas"] for libro in lista_libros
         if libro["genero"].lower() == genero_buscado.lower()
@@ -103,13 +79,7 @@ def promedio_paginas_por_genero(genero_buscado, lista_libros):
     return sum(paginas_del_genero) / len(paginas_del_genero)
 
 def recomendar_libro_aleatorio(lista_libros):
-    """
-    Selecciona y muestra un libro al azar de la lista.
-    Args:
-        lista_libros (list): La lista de diccionarios de libros.
-    Returns:
-        dict or None: El diccionario del libro seleccionado al azar, o None si la lista está vacía.
-    """
+   
     if not lista_libros:
         print("No hay libros en la biblioteca para recomendar.")
         return None
@@ -124,15 +94,7 @@ def recomendar_libro_aleatorio(lista_libros):
     return libro_aleatorio
 
 def calcular_estadisticas_avanzadas(lista_libros):
-    """
-    Calcula la mediana de páginas y la desviación estándar del año de publicación
-    de todos los libros en la lista.
-    Args:
-        lista_libros (list): La lista de diccionarios de libros.
-    Returns:
-        dict: Un diccionario con la mediana de páginas y la desviación estándar del año,
-              o valores 'N/A' si no hay suficientes datos.
-    """
+   
     estadisticas = {}
     
     paginas = [libro["num_paginas"] for libro in lista_libros]
@@ -156,9 +118,9 @@ def calcular_estadisticas_avanzadas(lista_libros):
     return estadisticas
 
 def mostrar_info_libro(libro):
-    """
-    Función auxiliar para imprimir la información de un libro.
-    """
+    
+    #Función auxiliar para imprimir la información de un libro.
+    
     if libro:
         print(f"  Título: {libro['titulo']}")
         print(f"  Autor: {libro['autor']}")
@@ -262,4 +224,5 @@ if __name__ == "__main__":
         print("\n--- Estadísticas Avanzadas de la Biblioteca ---")
         print(f"Mediana de páginas de todos los libros: {estadisticas_avanzadas['mediana_paginas']}")
         print(f"Desviación estándar del año de publicación: {estadisticas_avanzadas['desviacion_estandar_ano']:.2f}" if isinstance(estadisticas_avanzadas['desviacion_estandar_ano'], float) else f"Desviación estándar del año de publicación: {estadisticas_avanzadas['desviacion_estandar_ano']}")
+
 
